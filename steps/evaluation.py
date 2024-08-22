@@ -5,7 +5,7 @@ import numpy as np
 from zenml import step
 from scipy.sparse import spmatrix
 from sklearn.base import ClassifierMixin
-from src.evaluation import MSE, R2, RMSE
+from src.evaluation import Accuracy, Precision, MSE, R2, RMSE
 from typing import Tuple
 from typing_extensions import Annotated
 
@@ -19,8 +19,10 @@ def evaluate_model(
   X_test: spmatrix,
   y_test: np.ndarray
   ) -> Tuple[
-    Annotated[float, "r2_score"],
-    Annotated[float, "rmse"]
+    Annotated[float, "accuracy"],
+    Annotated[float, "precision"],
+    # Annotated[float, "r2_score"],
+    # Annotated[float, "rmse"]
   ]:
   """
   Evaluates the model on the ingested Data
@@ -31,19 +33,27 @@ def evaluate_model(
   try:
     prediction = model.predict(X_test)
     
-    mse_class = MSE()
-    mse = mse_class.calculate_scores(y_test, prediction)
-    mlflow.log_metric("mse", mse)
+    accuracy_class = Accuracy()
+    accuracy = accuracy_class.calculate_scores(y_test, prediction)
+    mlflow.log_metric("accuracy", accuracy)
     
-    r2_class = R2()
-    r2_score = r2_class.calculate_scores(y_test, prediction)
-    mlflow.log_metric("r2", r2_score)
+    precision_class = Precision()
+    precision = precision_class.calculate_scores(y_test, prediction)
+    mlflow.log_metric("accuracy", precision)
     
-    rmse_class = RMSE()
-    rmse = rmse_class.calculate_scores(y_test, prediction)
-    mlflow.log_metric("rmse", rmse)
+    # mse_class = MSE()
+    # mse = mse_class.calculate_scores(y_test, prediction)
+    # mlflow.log_metric("mse", mse)
     
-    return r2_score, rmse
+    # r2_class = R2()
+    # r2_score = r2_class.calculate_scores(y_test, prediction)
+    # mlflow.log_metric("r2", r2_score)
+    
+    # rmse_class = RMSE()
+    # rmse = rmse_class.calculate_scores(y_test, prediction)
+    # mlflow.log_metric("rmse", rmse)
+    
+    return accuracy, precision
   except Exception as e:
     logging.error("Error in evaluating model: {}".format(e))
     raise e

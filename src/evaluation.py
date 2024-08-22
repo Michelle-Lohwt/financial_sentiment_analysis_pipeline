@@ -1,7 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
 import numpy as np
-from sklearn.metrics import mean_squared_error, r2_score, root_mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score, root_mean_squared_error, accuracy_score, precision_score
 
 class Evaluation(ABC):
   """
@@ -19,6 +19,34 @@ class Evaluation(ABC):
       None
     """
     pass
+  
+class Accuracy(Evaluation):
+  """
+  Evaluation Strategy that uses Accuracy
+  """
+  def calculate_scores(self, y_true: np.ndarray, y_pred: np.ndarray):
+    try:
+      logging.info("Calculating Accuracy")
+      accuracy = accuracy_score(y_true, y_pred)
+      logging.info("Accuracy: {}".format(accuracy))
+      return accuracy
+    except Exception as e:
+      logging.error("Error in calculating Accuracy: {}".format(e))
+      raise e
+    
+class Precision(Evaluation):
+  """
+  Evaluation Strategy that uses Precision
+  """
+  def calculate_scores(self, y_true: np.ndarray, y_pred: np.ndarray):
+    try:
+      logging.info("Calculating Precision")
+      precision = precision_score(y_true, y_pred, average='weighted')
+      logging.info("Precision: {}".format(precision))
+      return precision
+    except Exception as e:
+      logging.error("Error in calculating Precision: {}".format(e))
+      raise e
   
 class MSE(Evaluation):
   """
