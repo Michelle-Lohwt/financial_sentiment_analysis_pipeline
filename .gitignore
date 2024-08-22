@@ -1,0 +1,5 @@
+venv
+src/__*__
+steps/__*__
+pipelines/__*__
+.zen
