@@ -1,5 +1,7 @@
 # financial_sentiment_analysis_pipeline
 
+![alt text](statics/image.png)
+
 ## To setup the repo
 ```
 $ python -m venv venv
